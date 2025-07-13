@@ -40,7 +40,7 @@ public class Display {
         gameWindow.setVisible(true);
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setLocationRelativeTo(null);
-        gamePanel.setBackground(new Color(0x228B22)); //Set the background to green (for the grass..)
+        gamePanel.setBackground(new Color(0x228B21)); //Set the background to green (for the grass..)
         gameWindow.setContentPane(gamePanel);
     }
 

@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class Player {
 
-    private int playerXPos = 20;
-    private int playerYPos = 20;
+    private int playerXPos = 0;
+    private int playerYPos = 0;
     private int playerWidth = 50;
     private int playerHeight = 50;
 

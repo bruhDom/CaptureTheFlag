@@ -3,30 +3,70 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class Panel extends JPanel {
+public class Panel extends JPanel implements KeyListener  {
     
     Player player = new Player();
 
 
-    public Panel() {
-        setBorder(BorderFactory.createLineBorder(Color.black));
+    public enum Direction {
+        UP(0, -50),
+        DOWN(0, 50),
+        RIGHT(50, 0),
+        LEFT(-50, 0);
 
-        
+        public final int dx;
+        public final int dy;
 
-        addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                movePlayer(e.getX(), e.getY());
-            }
-        });
-
-        addMouseListener(new MouseAdapter() {
-            public void mouseDragged(MouseEvent e) {
-                movePlayer(e.getX(), e.getY());
-            }
-        });
+        Direction(int dx, int dy) {
+            this.dx = dx;
+            this.dy = dy;
+        }
     }
 
-    public void movePlayer(int x, int y) {
+    public Panel() {
+        setBorder(BorderFactory.createLineBorder(Color.black));
+        setFocusable(true);
+        requestFocusInWindow();
+        addKeyListener(this);
+
+
+        
+        
+    }
+
+    public void keyPressed(KeyEvent e)
+    {
+        System.out.println("Key Pressed: " + e.getKeyCode());
+        switch(e.getKeyCode())
+        {
+            case KeyEvent.VK_W: 
+                movePlayer(Direction.UP);
+                break;
+            case KeyEvent.VK_S:
+                movePlayer(Direction.DOWN);
+                break;
+            case KeyEvent.VK_A:
+                movePlayer(Direction.LEFT);
+                break;
+            case KeyEvent.VK_D:
+                movePlayer(Direction.RIGHT);
+
+
+
+        }
+    }
+
+    public void keyReleased(KeyEvent e)
+    {
+
+    }
+
+    public void keyTyped(KeyEvent e)
+    {
+
+    }
+    
+    public void movePlayer(Direction direction) {
         
         //Current player state stored as final variables
         //to avoid repeat invocations of the same method
@@ -37,15 +77,13 @@ public class Panel extends JPanel {
         final int CURR_HEIGHT = player.getHeight();
         final int OFFSET = 1;
 
-        if ((CURR_X != x) || (CURR_Y != y)) {
-            repaint(CURR_X, CURR_Y, CURR_HEIGHT + OFFSET, CURR_WIDTH + OFFSET);
-            
-            player.setX(x);
-            player.setY(y);
+        repaint(CURR_X, CURR_Y, CURR_WIDTH + OFFSET, CURR_HEIGHT + OFFSET);
 
-            repaint(player.getX(), player.getY(), player.getWidth() + OFFSET, player.getHeight() + OFFSET);
-            
-        }
+        player.setX(player.getX() + direction.dx);
+        player.setY(player.getY() + direction.dy);
+
+        repaint(player.getX(), player.getY(), CURR_WIDTH + OFFSET, CURR_HEIGHT + OFFSET);
+
 
 
     }
@@ -58,8 +96,7 @@ public class Panel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        //Draw Text
-        g.drawString("This is my custom panel", 10, 20);
+        //Draw Lines
 
         player.paintPlayer(g);
         gridCreation(g);
@@ -72,15 +109,18 @@ public class Panel extends JPanel {
 
     public void gridCreation(Graphics g)
     {
-        for (int y = 0; y < (Display.PANEL_HEIGHT/Display.TILE_SIZE); y += Display.TILE_SIZE)
+       
+        for(int x = 0; x <= Display.PANEL_WIDTH; x+= Display.TILE_SIZE)
         {
-            g.drawLine(y, 0, y, 900);
-
-            for (int x = 0; x < (Display.PANEL_WIDTH/Display.TILE_SIZE); x += Display.TILE_SIZE)
-            {
-                g.drawLine(0, x, 900, x);
-            }
+            g.drawLine(x, 0, x, Display.PANEL_HEIGHT);
         }
+        
+        
+        for(int y = 0; y <= Display.PANEL_HEIGHT; y+= Display.TILE_SIZE)
+        {
+            g.drawLine(0, y, Display.PANEL_WIDTH, y);
+        }
+
     }
 
 
